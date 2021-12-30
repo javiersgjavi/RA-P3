@@ -2,10 +2,12 @@ from objects.Simulation import Simulation
 
 
 def main():
-    path = './boards/maze_2.png'
-    pixel_size = 1
-    num_nodes = 50
-    fps = 5
+    path = './boards/maze_1.png'
+    pixel_size = 4
+    size_node = pixel_size
+    num_nodes = 200
+    distance = 200
+    fps = 60
     colors = {
         'white': (255, 255, 255),
         'black': (0, 0, 0),
@@ -17,8 +19,10 @@ def main():
     simulation = Simulation(
         path=path,
         pixel_size=pixel_size,
+        size_node=size_node,
         colors=colors,
         num_nodes=num_nodes,
+        distance=distance,
         fps=fps
     )
 

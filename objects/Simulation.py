@@ -29,16 +29,11 @@ class Simulation:
                 if (i, j) in self.graph.get_position_nodes():
                     color = self.colors['blue']
                     pos = (i, j)
-                    radio = self.pixel_size * 6
+                    radio = self.pixel_size * 1
                     pygame.draw.circle(self.screen, color, pos, radio)
 
                 elif value == 1:
                     color = self.colors['black']
-                    rect = pygame.Rect(i * self.pixel_size, j * self.pixel_size, self.pixel_size, self.pixel_size)
-                    pygame.draw.rect(self.screen, color, rect, self.pixel_size)
-
-                else:
-                    color = self.colors['white']
                     rect = pygame.Rect(i * self.pixel_size, j * self.pixel_size, self.pixel_size, self.pixel_size)
                     pygame.draw.rect(self.screen, color, rect, self.pixel_size)
 

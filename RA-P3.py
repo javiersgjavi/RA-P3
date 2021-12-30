@@ -4,7 +4,8 @@ from objects.Simulation import Simulation
 def main():
     path = './boards/maze_2.png'
     pixel_size = 1
-    num_nodes = 100
+    num_nodes = 50
+    fps = 5
     colors = {
         'white': (255, 255, 255),
         'black': (0, 0, 0),
@@ -17,7 +18,8 @@ def main():
         path=path,
         pixel_size=pixel_size,
         colors=colors,
-        num_nodes=num_nodes
+        num_nodes=num_nodes,
+        fps=fps
     )
 
     simulation.run()

@@ -6,35 +6,36 @@ import numpy as np
 
 
 class Simulation:
-    def __init__(self, path, colors, pixel_size, num_nodes):
+    def __init__(self, path, colors, pixel_size, num_nodes, fps):
         self.pixel_size = pixel_size
-        self.grid = Grid(path=path, pixel_size=self.pixel_size)
-
+        self.grid = Grid(path=path)
         self.shape = self.grid.get_shape()
         self.screen = pygame.display.set_mode((self.shape[0] * pixel_size, self.shape[1] * pixel_size))
         self.clock = pygame.time.Clock()
         self.colors = colors
         self.screen.fill(self.colors['white'])
-        self.fps = 10
+        self.fps = fps
         self.graph = Graph()
         self.num_nodes = num_nodes
         self.edges_generated = False
+        self.iteration = 0
 
     def draw(self):
         self.screen.fill(self.colors['white'])
-        for i in range(self.grid.height):
-            for j in range(self.grid.width):
-                value = self.grid.get_cell(i, j)
+        for y in range(self.grid.height):
+            for x in range(self.grid.width):
+                position = (x, y)
+                value = self.grid.get_cell(y, x)
 
-                if (i, j) in self.graph.get_position_nodes():
+                if position in self.graph.get_position_nodes():
                     color = self.colors['blue']
-                    pos = (i, j)
-                    radio = self.pixel_size * 1
-                    pygame.draw.circle(self.screen, color, pos, radio)
+                    radio = self.pixel_size * 5
+                    pygame.draw.circle(self.screen, color, position, radio)
 
                 elif value == 1:
                     color = self.colors['black']
-                    rect = pygame.Rect(i * self.pixel_size, j * self.pixel_size, self.pixel_size, self.pixel_size)
+                    rect = pygame.Rect(position[0] * self.pixel_size, position[1] * self.pixel_size, self.pixel_size,
+                                       self.pixel_size)
                     pygame.draw.rect(self.screen, color, rect, self.pixel_size)
 
     def update_gui(self):
@@ -43,19 +44,24 @@ class Simulation:
         self.clock.tick(self.fps)
 
     def run(self):
+        pygame.init()
 
         self.update_gui()
+        # pygame.event.grab(True)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+        while True:
 
-            print(self.graph.count_nodes(), self.num_nodes, self.graph.count_nodes() < self.num_nodes)
+            print('Iteration: ', self.iteration, '-----' * 10)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
             if self.graph.count_nodes() < self.num_nodes:
+
                 node_found = False
                 while not node_found:
+
                     i = np.random.randint(self.shape[0])
                     j = np.random.randint(self.shape[1])
                     cell = self.grid.get_cell(i, j)
@@ -70,3 +76,5 @@ class Simulation:
                 pass
 
             self.update_gui()
+
+            self.iteration += 1

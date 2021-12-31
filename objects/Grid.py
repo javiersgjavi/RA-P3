@@ -9,7 +9,7 @@ class Grid:
         grid = np.array(image)
         self.width = grid.shape[0]
         self.height = grid.shape[1]
-        self.board = np.where(grid == 0, 1, 0)
+        self.board = np.where(grid < 245, 1, 0)
 
     def is_valid(self, x, y):
         res = True

@@ -8,8 +8,20 @@ class Graph:
         self.graph = nx.Graph()
         self.position_nodes = []
 
+    def get_shortest_path(self):
+        return nx.shortest_path(self.graph)
+
     def get_nodes(self):
         return self.graph.nodes()
+
+    def get_node_by_position(self, position):
+        res = None
+        nodes = self.get_nodes()
+        for node in nodes:
+            if node.get_position() == position:
+                return res
+
+        return res
 
     def get_position_nodes(self):
         return self.position_nodes
@@ -38,10 +50,11 @@ class Graph:
 
     def get_density(self, position, distance):
         res = 1
-        nodes = self.get_nodes()
-        for node in nodes:
-            if get_distance(position, node.get_position()) <= distance:
-                res += 1
+        if distance:
+            nodes = self.get_nodes()
+            for node in nodes:
+                if get_distance(position, node.get_position()) <= distance:
+                    res += 1
         return res
 
     def check_neigbours(self, node):
@@ -70,6 +83,7 @@ def get_other_node(edge, node):
         return nodes[1]
     else:
         return nodes[0]
+
 
 class Node:
     new_id = itertools.count()

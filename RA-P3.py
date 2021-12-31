@@ -2,17 +2,19 @@ from objects.Simulation import Simulation
 
 
 def main():
-    path = './boards/maze_1.png'
-    pixel_size = 4
+    path = 'boards/maze_3.png'
+    pixel_size = 1
     size_node = pixel_size
-    num_nodes = 200
-    distance = 200
+    start_point = (5, 10)
+    end_point = (80, 155)
+    num_nodes = 230
+    distance = None
     fps = 60
     colors = {
         'white': (255, 255, 255),
         'black': (0, 0, 0),
         'red': (255, 0, 0),
-        'green': (0, 255, 0),
+        'green': (0, 150, 0),
         'blue': (0, 0, 255),
     }
 
@@ -23,7 +25,9 @@ def main():
         colors=colors,
         num_nodes=num_nodes,
         distance=distance,
-        fps=fps
+        fps=fps,
+        start_point=start_point,
+        end_point=end_point,
     )
 
     simulation.run()

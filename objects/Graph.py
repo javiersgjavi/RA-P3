@@ -19,7 +19,8 @@ class Graph:
         nodes = self.get_nodes()
         for node in nodes:
             if node.get_position() == position:
-                return res
+                res = node
+                break
 
         return res
 

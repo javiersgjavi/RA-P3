@@ -2,8 +2,9 @@ from objects.Simulation import Simulation
 
 
 def main():
-    path = 'boards/maze_3.png'
-    pixel_size = 1
+    path = 'boards/maze_1.png'
+    gui = True
+    pixel_size = 3
     size_node = pixel_size
     start_point = (5, 10)
     end_point = (80, 155)
@@ -28,6 +29,7 @@ def main():
         fps=fps,
         start_point=start_point,
         end_point=end_point,
+        gui=gui
     )
 
     simulation.run()

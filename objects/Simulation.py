@@ -5,10 +5,12 @@ import pygame
 import sys
 import numpy as np
 import os
+import time
+from IPython.display import clear_output
 
 
 class Simulation:
-    def __init__(self, path, colors, pixel_size, num_nodes, fps, size_node, distance, start_point, end_point):
+    def __init__(self, path, colors, pixel_size, num_nodes, fps, size_node, distance, start_point, end_point, gui):
         self.path_image = path
         self.pixel_size = pixel_size
         self.size_node = size_node
@@ -27,6 +29,11 @@ class Simulation:
         self.distance = distance
         self.start_point = start_point
         self.end_point = end_point
+        self.gui = gui
+        self.loops_without_connection = 0
+
+    def print_iteration(self, action):
+        print('-----' * 5, f'Iteration {self.iteration}: {action} ', '-----' * 5)
 
     def draw_edge(self, position_1, position_2):
         node_1_pos = position_1[1] * self.pixel_size, position_1[0] * self.pixel_size
@@ -133,22 +140,26 @@ class Simulation:
             self.add_edge(node, nodes)
 
         else:
+
             node = self.graph.get_node_by_position(position)
 
         return node
 
     def generate_graph(self):
         loop = True
+        after_nodes = 0
 
         while loop:
 
-            #print('Iteration: ', self.iteration, '-----' * 10)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
-            if self.graph.count_nodes() < self.num_nodes:
+            if self.graph.count_nodes() < self.num_nodes or self.loops_without_connection == 7:
+
+                if self.gui:
+                    self.print_iteration('creating nodes')
 
                 node_found = False
                 while not node_found:
@@ -165,18 +176,38 @@ class Simulation:
                         self.graph.add_node(node)
                         node_found = True
 
+                if self.loops_without_connection == 7:
+                    after_nodes += 1
+
+                    if after_nodes == self.num_nodes:
+                        self.loops_without_connection = 0
+                        after_nodes = 0
+
             elif not self.graph.is_connected():
+
+                if not self.gui:
+                    self.print_iteration('creating edges')
+
                 index = self.iteration % self.graph.count_nodes()
                 nodes = self.graph.get_nodes()
                 current_node = nodes[index]
                 self.add_edge(current_node, nodes)
 
+                if self.iteration % self.graph.count_nodes() == self.graph.count_nodes() - 1:
+                    self.loops_without_connection += 1
+
             else:
+                clear_output(wait=True)
+                if not self.gui:
+                    self.print_iteration('adding start and end nodes')
+
                 start_node = self.get_or_create_node(self.start_point)
                 end_node = self.get_or_create_node(self.end_point)
                 loop = False
 
-            self.update_gui()
+            if self.gui:
+                self.update_gui()
+
             self.iteration += 1
 
         return start_node, end_node
@@ -186,19 +217,26 @@ class Simulation:
         return path
 
     def run(self):
-        pygame.init()
-        self.update_gui()
+        try:
+            start = time.time()
+            pygame.init()
+            if not self.gui:
+                self.update_gui()
 
-        start_node, end_node = self.generate_graph()
-        print(f'Generated graph with {self.graph.count_nodes()} nodes and {self.graph.count_edges()} edges')
-        path = self.find_sortest_path(start_node, end_node)
+            start_node, end_node = self.generate_graph()
+            print(
+                f'Generated graph in {round(time.time() - start, 2)} seconds with {self.graph.count_nodes()} nodes and {self.graph.count_edges()} edges')
+            path = self.find_sortest_path(start_node, end_node)
 
-        self.update_gui(path)
+            self.update_gui(path)
 
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+            while True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                        # os.__exit(1)
 
 
+        except SystemExit as e:
+            pass

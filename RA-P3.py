@@ -2,6 +2,7 @@ from objects.Simulation import Simulation
 
 
 def main():
+    name_experiment = 'experimento_1'
     path = 'boards/maze_1.png'
     gui = True
     pixel_size = 3
@@ -19,7 +20,10 @@ def main():
         'blue': (0, 0, 255),
     }
 
+    start_point = (74, 105)
+    end_point = (22, 22)
     simulation = Simulation(
+        name=name_experiment,
         path=path,
         pixel_size=pixel_size,
         size_node=size_node,

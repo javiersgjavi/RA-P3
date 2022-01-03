@@ -10,7 +10,8 @@ from IPython.display import clear_output
 
 
 class Simulation:
-    def __init__(self, path, colors, pixel_size, num_nodes, fps, size_node, distance, start_point, end_point, gui):
+    def __init__(self, name, path, colors, pixel_size, num_nodes, fps, size_node, distance, start_point, end_point, gui):
+        self.name_experiment = name
         self.path_image = path
         self.pixel_size = pixel_size
         self.size_node = size_node
@@ -116,8 +117,7 @@ class Simulation:
         if path:
             if not os.path.exists('./results/'):
                 os.makedirs('./results/')
-            name = self.path_image.split('/')[-1]
-            pygame.image.save(self.screen, f'./results/{name}')
+            pygame.image.save(self.screen, f'./results/{self.name_experiment}.png')
 
     def add_edge(self, current_node, nodes):
         position_by_distance = {get_distance(n.get_position(), current_node.get_position()): i for i, n in
